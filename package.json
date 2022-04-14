@@ -7,7 +7,8 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "test": "jest",
-    "generateData": "node utils/getEventJson.js > data/data.json"
+    "generateData": "node utils/getEventJson.js > data/data.json",
+    "importData": "rm -rf dist && tsc --project scripts.tsconfig.json && node dist/scripts/importData.js"
   },
   "keywords": [],
   "author": "",
@@ -15,17 +16,21 @@
   "devDependencies": {
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.6",
+    "@faker-js/faker": "^6.1.2",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.0.1",
-    "@types/node": "^16.9.1",
+    "@types/node": "^16.11.26",
     "babel-jest": "^27.2.0",
     "jest": "^27.2.0",
-    "typescript": "^4.4.3"
+    "typescript": "^4.6.3"
   },
   "dependencies": {
     "@babel/preset-typescript": "^7.15.0",
     "@types/sqlite3": "^3.1.7",
-    "express": "^4.17.1",
-    "sqlite3": "^5.0.2"
+    "axios": "^0.26.1",
+    "express": "^4.17.3",
+    "reflect-metadata": "^0.1.13",
+    "sqlite3": "^5.0.2",
+    "typeorm": "^0.3.6"
   }
 }
