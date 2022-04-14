@@ -1,118 +1,32 @@
-# Sherpa° Coding Challenge
-
-## Introduction
-
-Hi! If you're reading this then it's because you're in the interview process with us at sherpa° and have been invited to
-complete the coding challenge. Congratulations!
-
-This coding challenge is designed to assess your ability while giving you the freedom to express yourself and show off
-what you consider to be best practices.
-
 ## Setup
 
-This repo contains the skeleton of an express app in typescript, to which you will add functionality. The code here was
-built for node version 14.
+Same as the parent repo
 
-The first step is to run `npm i` to install the required dependencies.
+### .env File
 
-A handful of scripts are provided, `npm run build` will build the application, `npm run start` will start the
-application, `npm run test` will run the tests.
+Before you run anything, you need to rename the `.env.sample` to `.env` and you need to fill the env variables, each var has it's comment to how to get that.
 
-The last script `generateData` should be executed in order to populate a json file at `data/data.json` this is required
-because it is necessary that the data have dates that are in the near future.
 
-## The scenario
+### Seed Data
 
-You are a developer at a consulting company to work on a brand-new project, requirement is to build an application to
-service an events management company.
+`npm run importData` is the first command that you should run before spinnin' the server, so, the database schema, and database is filled with initial data
 
-Currently, everything is being managed by hand and this is proving unwieldy. The first step of the first iteration of
-the solution is to build a REST api to perform CRUD operations on events.
+### Spinin' the server
 
-### Requirements
+Once your complete the above steps, you can build and start the server
 
-#### The Data
 
-Determine how to model the data. The clients have provided a sample of their data in `data/data.json`. Your project
-manager has told you that they have events, events have a location, a name, and an organizer, who is a member of staff
-responsible for the event. You also know that there will be a need to associate a list of invitees with events, along
-with their rsvp status.
 
-**Derive a data model for this relation of entities. Create the tables in the sqlite database, you may want to think
-about maintainability and documentation, an ERD might be useful, as might a migration process, you may want to think
-about using an ORM.**
+## Some Gotchas'
 
-The data given to you by the clients is a sample of the data as you expect to receive it. When the time comes they will
-provide a large json file to import into the db.
+### ORM
+I have used typeorm, I have never used this ORM, but I found their API well thought out, and plays well with typescript
 
-**Import the sample data into the database, write a script to do this and bear in mind it must operate at scale. You
-should think about data integrity, these clients are not tech-savvy, and we don't know how this json is being generated**
+### Data at Scale
+For the importData script, I used the Steam API, just to show that's the recommended way of dealing with data at scale, but in the example you gave, the benifit of using Stream API wouldn't matter because the input file is JSON, which is not intended to deal with large files, as you cannot stream line the file, CSV would be a good fit as you can read the file line by line and you can save each entity that way, but for JSON it's not possible.
 
-#### The api
+### Weather API
+I have used https://www.weatherapi.com/, I have created an account to get the API KEY, I couldn't find a good api without api key
 
-`GET /events`
-
-Retrieve upcoming events, the endpoint must accept the following query parameters:
-
-- `from`: optional, Date, defaults ot the current time, only return events after this date
-- `until`: optional, Date, if omitted return all future events
-
-The required response is:
-
-```
-{
-    results: [
-        {
-            id: <unique identifier of event in our system>,
-            name: string,
-            date: Date,
-            isOutside: boolean
-            attandees: [] // empty array is fine for first iteration
-            organizer: {
-                id: <unique identifier of organizer in our system>,
-                name: string
-            },
-        }
-    ]
-}
-```
-
-In addition, the results must be paginated, the specifics of the pagination are left up to you to decide.
-
-`GET /events/{eventId}`
-
-Retrieve details for an upcoming event
-
-```
-{
-    id: <unique identifier of event in our system>,
-    name: string,
-    date: Date,
-    isOutside: boolean
-    attandees: [] // empty array is fine for first iteration
-    organizer: {
-        id: <unique identifier of organizer in our system>,
-        name: string
-    },
-    // if an event is outside and occuring withing 7 days, call any weather api to get the following details
-    // if an event is not outside, or not occuring within 7 days this should be null
-    weather: null || {
-        temperatureInDegreesCelcius: number,
-        chanceOfRain: number 0-100
-    }
-    // OPTIONAL: This has been designated a 'nice to to have'
-    // if an event is happening in any country other than canada, fetch the visa and proof of vaccination requirements our organizers need
-    // the destination would be the country the event is happening in and the source is canada
-    // if an event is happening in canada, leave this null
-    visaRequirements: null | string
-    proofOfVaccineRequired: null | boolean
-}
-```
-
-# Tips
-
-You have been provided with the barest of bare bones to get started. But don't feel compelled to use what is here, if you prefer hapi to express, or don't want to use any kind of http framework at all, or dislike typescript, you can yank those out and start completely afresh. You won't be judged negatively for it, but if you do make any big decisions it would certainly be a good idea to document why you chose what you chose.  
-
-Because the slate is blank, you will be making a lot of decisions about how the app should work, it's a good idea to document these decisions, as you will very likely be asked about them in the follow-up.
-
-The functional requirements here should probably take no longer than a couple of hours to implement. The standard you should be aiming for is something you would submit as a pull request for a production ready feature.
+### Visa and Vaccination Requirements
+I have used your requirements-api endpoint with a client key that got from a XHR request that I inpected from Network tab
